@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
+import com.example.simpleandroidjetpack.extensions.navigateWithAnimation
 import kotlinx.android.synthetic.main.fragment_start.*
 
 class StartFragment : Fragment() {
@@ -21,7 +22,7 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btnNext.setOnClickListener {
-            findNavController().navigate(R.id.action_startFragment_to_profileFragment)
+            findNavController().navigateWithAnimation(R.id.action_startFragment_to_profileFragment)
         }
     }
 }
