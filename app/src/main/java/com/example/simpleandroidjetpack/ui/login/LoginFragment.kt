@@ -2,10 +2,13 @@ package com.example.simpleandroidjetpack.ui.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.login_fragment.*
@@ -23,9 +26,13 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         viewModel.authenticationStateEvent.observe(viewLifecycleOwner, { authenticationState ->
             when (authenticationState) {
+                is LoginViewModel.AuthenticationState.Authenticated -> {
+                    findNavController().popBackStack()
+                }
                 is LoginViewModel.AuthenticationState.InvalidAuthentication -> {
                     val validationFields: Map<String, TextInputLayout> = initValidationFields()
 
@@ -42,6 +49,27 @@ class LoginFragment : Fragment() {
 
             viewModel.authentication(username, password)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            cancelAuthentication()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                cancelAuthentication()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    private fun cancelAuthentication() {
+        viewModel.refuseAuthentication()
+        findNavController().popBackStack(R.id.startFragment, false)
     }
 
     private fun initValidationFields() = mapOf(

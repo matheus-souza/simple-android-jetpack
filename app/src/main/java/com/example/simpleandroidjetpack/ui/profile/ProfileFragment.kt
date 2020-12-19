@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
 import com.example.simpleandroidjetpack.ui.login.LoginViewModel
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
@@ -29,7 +30,7 @@ class ProfileFragment : Fragment() {
         loginViewModel.authenticationStateEvent.observe(viewLifecycleOwner, { authenticationState ->
             when (authenticationState) {
                 is LoginViewModel.AuthenticationState.Authenticated -> {
-
+                    tvUsersername.text = getString(R.string.profile_text_username, loginViewModel.username)
                 }
                 is LoginViewModel.AuthenticationState.Unauthenticated -> {
                     findNavController().navigate(R.id.loginFragment)
