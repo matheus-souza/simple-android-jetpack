@@ -7,14 +7,20 @@ import com.example.simpleandroidjetpack.R
 class LoginViewModel : ViewModel() {
 
     sealed class AuthenticationState {
+        object Unauthenticated : AuthenticationState()
+        object Authenticated : AuthenticationState()
         class InvalidAuthentication(val fields: List<Pair<String, Int>>) : AuthenticationState()
     }
 
     val authenticationStateEvent = MutableLiveData<AuthenticationState>()
 
+    init {
+        authenticationStateEvent.value = AuthenticationState.Unauthenticated
+    }
+
     fun authentication(username: String, password: String) {
         if (isValidForm(username, password)) {
-            // TODO: 05/12/20 usuário está autenticado
+            authenticationStateEvent.value = AuthenticationState.Authenticated
         }
     }
 
