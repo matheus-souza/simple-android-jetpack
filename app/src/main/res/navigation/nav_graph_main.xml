@@ -23,6 +23,6 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.simpleandroidjetpack.ui.login.LoginFragment"
-        android:label="login_fragment"
+        android:label="@string/login_action_bar_title"
         tools:layout="@layout/login_fragment" />
 </navigation>

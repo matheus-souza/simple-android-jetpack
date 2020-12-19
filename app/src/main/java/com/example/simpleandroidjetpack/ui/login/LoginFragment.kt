@@ -6,10 +6,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
+import com.example.simpleandroidjetpack.extensions.dismissError
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.login_fragment.*
 
@@ -48,6 +50,14 @@ class LoginFragment : Fragment() {
             val password = inputLoginPassword.text.toString()
 
             viewModel.authentication(username, password)
+        }
+
+        inputLoginUsername.addTextChangedListener {
+            inputLayoutLoginUsername.dismissError()
+        }
+
+        inputLoginPassword.addTextChangedListener {
+            inputLayoutLoginPassword.dismissError()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
