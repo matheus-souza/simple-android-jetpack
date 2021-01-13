@@ -24,5 +24,32 @@
         android:id="@+id/loginFragment"
         android:name="com.example.simpleandroidjetpack.ui.login.LoginFragment"
         android:label="@string/login_action_bar_title"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/login_fragment">
+        <action
+            android:id="@+id/action_loginFragment_to_navigation"
+            app:destination="@id/registrationNavigation" />
+    </fragment>
+    <navigation
+        android:id="@+id/registrationNavigation"
+        app:startDestination="@id/profileDataFragment">
+        <fragment
+            android:id="@+id/profileDataFragment"
+            android:name="com.example.simpleandroidjetpack.ui.registration.profiledata.ProfileDataFragment"
+            android:label="fragment_profile_data"
+            tools:layout="@layout/fragment_profile_data">
+            <action
+                android:id="@+id/action_profileDataFragment_to_chooseCredentialsFragment"
+                app:destination="@id/chooseCredentialsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/chooseCredentialsFragment"
+            android:name="com.example.simpleandroidjetpack.ui.registration.choosecredentials.ChooseCredentialsFragment"
+            android:label="fragment_choose_credentials"
+            tools:layout="@layout/fragment_choose_credentials">
+            <argument
+                android:name="name"
+                app:argType="string"
+                app:nullable="false" />
+        </fragment>
+    </navigation>
 </navigation>
