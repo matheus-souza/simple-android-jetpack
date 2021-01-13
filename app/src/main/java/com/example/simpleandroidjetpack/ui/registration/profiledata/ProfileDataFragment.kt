@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
 import com.example.simpleandroidjetpack.ui.registration.RegistrationViewModel
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_profile_data.*
 
 class ProfileDataFragment : Fragment() {
@@ -26,6 +27,23 @@ class ProfileDataFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val validationFields = initValidationFields()
+        listenToRegistrationViewModelEvents(validationFields)
+
+        buttonProfileDataNext.setOnClickListener {
+            val name = inputProfileDataName.text.toString()
+            val bio = inputProfileDataBio.text.toString()
+
+            registrationViewModel.collectProfileData(name, bio)
+        }
+    }
+
+    private fun initValidationFields() = mapOf(
+        RegistrationViewModel.INPUT_NAME.first to inputLayoutProfileDataName,
+        RegistrationViewModel.INPUT_BIO.first to inputLayoutProfileDataBio,
+    )
+
+    private fun listenToRegistrationViewModelEvents(validationFields: Map<String, TextInputLayout>) {
         registrationViewModel.registrationStateEvent.observe(
             viewLifecycleOwner,
             { registrationState ->
@@ -36,6 +54,11 @@ class ProfileDataFragment : Fragment() {
                             .actionProfileDataFragmentToChooseCredentialsFragment(name)
 
                         findNavController().navigate(directions)
+                    }
+                    is RegistrationViewModel.RegistrationState.InvalidProfileData -> {
+                        registrationState.fields.forEach { fieldError ->
+                            validationFields[fieldError.first]?.error = getString(fieldError.second)
+                        }
                     }
                 }
             })

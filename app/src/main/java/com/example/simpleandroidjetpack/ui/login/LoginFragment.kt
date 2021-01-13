@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
 import com.example.simpleandroidjetpack.extensions.dismissError
+import com.example.simpleandroidjetpack.extensions.navigateWithAnimation
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.login_fragment.*
 
@@ -50,6 +51,10 @@ class LoginFragment : Fragment() {
             val password = inputLoginPassword.text.toString()
 
             viewModel.authentication(username, password)
+        }
+
+        buttonLoginSignUp.setOnClickListener {
+            findNavController().navigateWithAnimation(R.id.action_loginFragment_to_navigation)
         }
 
         inputLoginUsername.addTextChangedListener {
