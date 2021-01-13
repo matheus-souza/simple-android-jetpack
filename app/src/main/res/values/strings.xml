@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">SimpleAndroidJetpack</string>
 
+    <!-- Common -->
+    <string name="common_next">Next</string>
+    <string name="common_finish">Finish</string>
+
     <!-- START FRAGMENT -->
     <string name="start_action_bar_title">Start</string>
     <string name="next">next</string>
@@ -17,5 +21,14 @@
     <string name="login_button_text_sign_up">Sign up</string>
     <string name="login_input_layout_error_invalid_username">Invalid username</string>
     <string name="login_input_layout_error_invalid_password">Invalid password</string>
+
+
+    <!-- CHOOSE CREDENTIALS -->
+    <string name="choose_credentials_action_bar_title">Choose Credentials</string>
+    <string name="choose_credentials_input_layout_hint_username">Username</string>
+    <string name="choose_credentials_input_layout_hint_password">Password</string>
+    <string name="choose_credentials_input_layout_error_invalid_username">Invalid username</string>
+    <string name="choose_credentials_input_layout_error_invalid_password">Invalid password</string>
+    <string name="choose_credentials_text_name">%1$s, choose your credentials</string>
 
 </resources>
