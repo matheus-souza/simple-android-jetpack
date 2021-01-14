@@ -3,12 +3,15 @@ package com.example.simpleandroidjetpack.ui.registration.profiledata
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.simpleandroidjetpack.R
+import com.example.simpleandroidjetpack.extensions.dismissError
 import com.example.simpleandroidjetpack.ui.registration.RegistrationViewModel
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_profile_data.*
@@ -28,14 +31,9 @@ class ProfileDataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val validationFields = initValidationFields()
-        listenToRegistrationViewModelEvents(validationFields)
-
-        buttonProfileDataNext.setOnClickListener {
-            val name = inputProfileDataName.text.toString()
-            val bio = inputProfileDataBio.text.toString()
-
-            registrationViewModel.collectProfileData(name, bio)
-        }
+        listenToRegistrationStateEvent(validationFields)
+        registerViewListeners()
+        registerDeviceBackStackCallback()
     }
 
     private fun initValidationFields() = mapOf(
@@ -43,7 +41,7 @@ class ProfileDataFragment : Fragment() {
         RegistrationViewModel.INPUT_BIO.first to inputLayoutProfileDataBio,
     )
 
-    private fun listenToRegistrationViewModelEvents(validationFields: Map<String, TextInputLayout>) {
+    private fun listenToRegistrationStateEvent(validationFields: Map<String, TextInputLayout>) {
         registrationViewModel.registrationStateEvent.observe(
             viewLifecycleOwner,
             { registrationState ->
@@ -62,5 +60,38 @@ class ProfileDataFragment : Fragment() {
                     }
                 }
             })
+    }
+
+    private fun registerViewListeners() {
+        buttonProfileDataNext.setOnClickListener {
+            val name = inputProfileDataName.text.toString()
+            val bio = inputProfileDataBio.text.toString()
+
+            registrationViewModel.collectProfileData(name, bio)
+        }
+
+        inputProfileDataName.addTextChangedListener {
+            inputLayoutProfileDataName.dismissError()
+        }
+
+        inputProfileDataBio.addTextChangedListener {
+            inputLayoutProfileDataBio.dismissError()
+        }
+    }
+
+    private fun registerDeviceBackStackCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            cancelRegistration()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        cancelRegistration()
+        return true
+    }
+
+    private fun cancelRegistration() {
+        registrationViewModel.userCancelledRegistration()
+        findNavController().popBackStack(R.id.loginFragment, false)
     }
 }
