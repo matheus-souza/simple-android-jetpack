@@ -1,5 +1,7 @@
 package com.example.simpleandroidjetpack.ui.login
 
+import androidx.core.graphics.rotationMatrix
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.simpleandroidjetpack.R
@@ -12,28 +14,36 @@ class LoginViewModel : ViewModel() {
         class InvalidAuthentication(val fields: List<Pair<String, Int>>) : AuthenticationState()
     }
 
-    val authenticationStateEvent = MutableLiveData<AuthenticationState>()
-
     var username: String = ""
+    var token: String = ""
+
+    private val _authenticationStateEvent = MutableLiveData<AuthenticationState>()
+    val authenticationStateEvent: LiveData<AuthenticationState>
+        get() = _authenticationStateEvent
 
     init {
         refuseAuthentication()
     }
 
     fun refuseAuthentication() {
-        authenticationStateEvent.value = AuthenticationState.Unauthenticated
+        _authenticationStateEvent.value = AuthenticationState.Unauthenticated
     }
 
-    fun authentication(username: String, password: String) {
+    fun authenticateToken(token: String, username: String) {
+        this.token = token
+        this.username = username
+        _authenticationStateEvent.value = AuthenticationState.Authenticated
+    }
+
+    fun authenticate(username: String, password: String) {
         if (isValidForm(username, password)) {
             this.username = username
-            authenticationStateEvent.value = AuthenticationState.Authenticated
+            _authenticationStateEvent.value = AuthenticationState.Authenticated
         }
     }
 
     private fun isValidForm(username: String, password: String): Boolean {
         val invalidFields = arrayListOf<Pair<String, Int>>()
-
         if (username.isEmpty()) {
             invalidFields.add(INPUT_USERNAME)
         }
@@ -43,7 +53,8 @@ class LoginViewModel : ViewModel() {
         }
 
         if (invalidFields.isNotEmpty()) {
-            authenticationStateEvent.value = AuthenticationState.InvalidAuthentication(invalidFields)
+            _authenticationStateEvent.value =
+                AuthenticationState.InvalidAuthentication(invalidFields)
             return false
         }
 
